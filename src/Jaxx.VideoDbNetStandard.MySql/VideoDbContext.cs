@@ -56,6 +56,12 @@ namespace Jaxx.VideoDbNetStandard.MySql
             modelBuilder.Entity<videodb_videodata>()
                 .ToTable("videodb_videodata");
 
+            modelBuilder.Entity<homewebbridge_usermoviesettings>()
+                .ToTable("homewebbridge_usermoviesettings");
+
+            modelBuilder.Entity<homewebbridge_userseen>()
+               .ToTable("homewebbridge_userseen");
+
             MapForeignKeys(modelBuilder);
         }
 
@@ -83,6 +89,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public DbSet<videodb_users> Users { get; set; }
         public DbSet<videodb_userseen> UserSeen { get; set; }
         public DbSet<videodb_videodata> VideoData { get; set; }
+        public DbSet<homewebbridge_usermoviesettings> UserSettings { get; set; }
         
     }
 
