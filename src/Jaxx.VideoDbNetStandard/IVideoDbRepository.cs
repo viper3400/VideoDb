@@ -12,8 +12,6 @@ namespace Jaxx.VideoDbNetStandard
         IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId);
         videodb_videodata GetVideoDataById(int VideoId);
 
-        VideoDbMovie GetVideoData(int Id);
-
         /// <summary>
         /// Returns a list of all available genres in the videodb repository.
         /// </summary>
@@ -41,6 +39,13 @@ namespace Jaxx.VideoDbNetStandard
         IEnumerable<string> GetGenresForVideo(int VideoId);
 
         /// <summary>
+        /// Returns a list of movies matching to the given genre.
+        /// </summary>
+        /// <param name="GenreName"></param>
+        /// <returns></returns>
+        IEnumerable<videodb_videodata> GetMoviesByGenre(List<string> GenreNames);
+
+        /// <summary>
         /// Returns the name of the user.
         /// </summary>
         /// <param name="UserId">UserId</param>
@@ -53,13 +58,6 @@ namespace Jaxx.VideoDbNetStandard
         /// <param name="MediaTypeId"></param>
         /// <returns></returns>
         string GetMediaType(int MediaTypeId);
-
-        /// <summary>
-        /// Returns a list of movies matching to the given genre.
-        /// </summary>
-        /// <param name="GenreName"></param>
-        /// <returns></returns>
-        IEnumerable<VideoDbMovie> GetMoviesByGenre(List<string> GenreNames);
 
     }
 }

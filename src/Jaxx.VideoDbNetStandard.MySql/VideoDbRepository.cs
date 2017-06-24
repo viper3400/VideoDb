@@ -49,15 +49,9 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return query.FirstOrDefault();
         }
 
-
-        /// <summary>
-        /// Returns a list of movies matching to the given genre.
-        /// </summary>
-        /// <param name="GenreName"></param>
-        /// <returns></returns>
-        public IEnumerable<VideoDbMovie> GetMoviesByGenre(List<string> GenreNames)
+        public IEnumerable<videodb_videodata> GetMoviesByGenre(List<string> GenreNames)
         {
-            var resultList = new List<VideoDbMovie>();
+            var resultList = new List<videodb_videodata>();
 
             var genreIds = _dbContext.Genres
                 .Where(g => GenreNames.Contains(g.name))
@@ -66,7 +60,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
             // just go on if there are any results (otherwise the resultList will be kept empty)
             if (genreIds.Any())
-            {                
+            {
                 var movieIdsForSelctedGenre = from genre in _dbContext.Genre
                                               where genreIds.Contains(genre.genre_id)
                                               select genre.video_id;
@@ -77,8 +71,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
                 var movies = _dbContext.VideoData
                     .Where(m => movieIds.Contains(m.id));
 
-                resultList = ConvertToVideoDbMovie(movies.ToList()).ToList();
-
+                resultList = movies.ToList();
             }
 
             return resultList;
@@ -98,18 +91,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return query.FirstOrDefault();
         }
 
-        public VideoDbMovie GetVideoData(int Id)
-        {
-
-            var videoQuery = from vid in _dbContext.VideoData
-                             where vid.id == Id
-                             select vid;
-
-            var queryResult = videoQuery.ToList().FirstOrDefault();
-            var movieResult = ConvertToVideoDbMovie(queryResult);
-
-            return movieResult;
-        }
+       
 
         public videodb_videodata GetVideoDataById(int VideoId)
         {
@@ -149,54 +131,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return videoData;
         }
 
-        /// <summary>
-        /// Converts a videodb_videodata object to VideoDbMovie object.
-        /// Functions makes additional queries to fill owner name, mediatype name and genres.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        private VideoDbMovie ConvertToVideoDbMovie(videodb_videodata source)
-        {
-            var converted = new VideoDbMovie
-            {
-                DigitalVideoFilePath = source.filename,
-                DiskId = source.diskid,
-                Id = source.id,
-                ImgUrl = source.imgurl,
-                Length = source.runtime.ToString(),
-                Plot = source.plot,
-                Rating = source.rating,
-                SubTitle = source.subtitle,
-                Title = source.title,
-                OwnerId = source.owner_id,
-                MediaTypeId = source.mediatype
-            };
 
-            converted.Genres = GetGenresForVideo(source.id).ToList();
-            converted.Owner = GetUserName(source.owner_id);
-            converted.MediaType = GetMediaType(source.mediatype);
-
-            return converted;
-        }
-
-        /// <summary>
-        /// Converts an IEnuerable of videodb_videodata object to an IEnumerable of VideoDbMovie object.
-        /// Functions makes additional queries to fill owner name, mediatype name and genres.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        private IEnumerable<VideoDbMovie> ConvertToVideoDbMovie (IEnumerable<videodb_videodata> source)
-        {
-            var convertedMovieList = new List<VideoDbMovie>();
-
-            foreach (var movie in source)
-            {
-                var convertedMovie = ConvertToVideoDbMovie(movie);
-                convertedMovieList.Add(convertedMovie);
-            }
-
-            return convertedMovieList;
-        }
 
     }
 }
