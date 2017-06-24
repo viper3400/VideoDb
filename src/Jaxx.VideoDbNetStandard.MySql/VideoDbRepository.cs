@@ -18,6 +18,46 @@ namespace Jaxx.VideoDbNetStandard.MySql
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Creates a new record if the id of the given object is 0.
+        /// Otherwise the record with the given id will be updated.
+        /// </summary>
+        /// <param name="Video"></param>
+        /// <returns>Returns the id of the record.</returns>
+        public int InsertOrUpdateVideo(videodb_videodata Video)
+        {
+            if (Video.id.Equals(0))
+            {
+                // if id is 0 we will create a new record
+                Video.created = DateTime.Now;
+                Video.lastupdate = DateTime.Now;
+                _dbContext.VideoData.Add(Video);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                // in this case an existing record may be modified
+                Video.lastupdate = DateTime.Now;
+                _dbContext.Entry(Video).State = EntityState.Modified;
+                _dbContext.SaveChanges();
+            }
+
+            return Video.id;
+        }
+
+        /// <summary>
+        /// Get the videodata record with the given id.
+        /// </summary>
+        /// <param name="VideoId"></param>
+        /// <returns>Returns the videodata object.</returns>
+        public videodb_videodata GetVideoDataById(int VideoId)
+        {
+            var videoData = _dbContext.VideoData
+                .Include(o => o.VideoOwner)
+                .Where(v => v.id == VideoId).FirstOrDefault();
+            return videoData;
+        }
+
         public IEnumerable<videodb_genres> GetGenres()
         {
             return _dbContext.Genres;
@@ -89,16 +129,6 @@ namespace Jaxx.VideoDbNetStandard.MySql
                         select user.name;
 
             return query.FirstOrDefault();
-        }
-
-       
-
-        public videodb_videodata GetVideoDataById(int VideoId)
-        {
-            var videoData = _dbContext.VideoData
-                .Include(o => o.VideoOwner)
-                .Where(v => v.id == VideoId).FirstOrDefault();
-            return videoData;
         }
 
         public IEnumerable<videodb_videodata> GetVideoDataByTitle(string title)

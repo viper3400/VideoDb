@@ -8,9 +8,23 @@ using Jaxx.VideoDbNetStandard.BusinessModel;
 namespace Jaxx.VideoDbNetStandard
 {
     public interface  IVideoDbRepository
-    {
-        IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId);
+    {                    
+        /// <summary>
+        /// Creates a new record if the id of the given object is 0.
+        /// Otherwise the record with the given id will be updated.
+        /// </summary>
+        /// <param name="Video"></param>
+        /// <returns>Returns the id of the record.</returns>
+        int InsertOrUpdateVideo(videodb_videodata Video);
+
+        /// <summary>
+        /// Get the videodata record with the given id.
+        /// </summary>
+        /// <param name="VideoId"></param>
+        /// <returns>Returns the videodata object.</returns>
         videodb_videodata GetVideoDataById(int VideoId);
+
+        IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId);
 
         /// <summary>
         /// Returns a list of all available genres in the videodb repository.
