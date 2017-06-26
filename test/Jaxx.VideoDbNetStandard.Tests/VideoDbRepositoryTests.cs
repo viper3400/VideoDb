@@ -9,6 +9,7 @@
  *****************************************************************************************/
 
 using Jaxx.VideoDbNetStandard.MySql;
+using Jaxx.VideoDbNetStandard.DatabaseModel;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,36 @@ namespace Jaxx.VideoDbNetStandard.Tests
             var actual = _videoDbRepostiory.GetVideoDataByTitle("Batman");
 
             Assert.True(actual.Where(v => v.title.Contains("Batman")).Count() > 0);
+        }
 
+        [Fact]
+        public void InsertOrUpdateVideoDataTest()
+        {
+            var video = new videodb_videodata();
+            video.title = "TestVideo";
+            video.plot = "TestPlot";
+            video.owner_id = 3;
+
+            IVideoDbRepository _videoDbRepository
+                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+
+            var id = _videoDbRepository.InsertOrUpdateVideo(video);
+            Assert.True(id != 0);
+
+            var actual = _videoDbRepository.GetVideoDataById(id);
+
+            Assert.Equal("TestVideo", actual.title);
+            Assert.Equal("TestPlot", actual.plot);
+            Assert.Equal(3, actual.owner_id);
+
+            video.title = "TestVideo (Updated)";
+            var updatedId = _videoDbRepository.InsertOrUpdateVideo(video);
+
+            Assert.Equal(id, updatedId);
+
+            Assert.Equal("TestVideo (Updated)", actual.title);
+            Assert.Equal("TestPlot", actual.plot);
+            Assert.Equal(3, actual.owner_id);
         }
     }
 }
