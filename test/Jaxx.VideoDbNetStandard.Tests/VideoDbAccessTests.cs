@@ -31,24 +31,6 @@ namespace Jaxx.VideoDbNetStandard.Tests
         private string connectionString;
 
         /// <summary>
-        /// Test if an "ü" is supported.
-        /// </summary>
-        [Fact]
-        public void CharSetTest()
-        {
-            var id = 2472;
-            var expectedMovie = "Kirschblüten und rote Bohnen";
-
-            using (var context = VideoDbContextFactory.Create(connectionString))
-            {
-                var result = context.VideoData.Where(v => v.id == id);
-                var actual = result.FirstOrDefault().title;
-
-                Assert.Equal(expectedMovie, actual);
-            }
-        }
-
-        /// <summary>
         /// Test if all tables on database are accessible via EF
         /// </summary>
         [Fact]
@@ -71,96 +53,6 @@ namespace Jaxx.VideoDbNetStandard.Tests
                 Assert.True(videoData.FirstOrDefault().VideoOwner.id > 0);
                 Assert.True(users.Where(u => u.id == 3).FirstOrDefault().UserVideos.Count() > 0);
             }
-        }
-
-        [Fact]
-        public void UserVideosOverRepositoryTest()
-        {
-            IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
-
-            var videos = _videoDbRepostiory.GetVideoDataForUser(3);
-            Assert.True(videos.Count() > 0);
-        }
-
-        [Fact]
-        public void GetVideoDataOverRepositoryTest()
-        {
-            IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
-
-            var videos = _videoDbRepostiory.GetVideoDataById(52);
-            Assert.True(videos.id == 52,"Wrong id.");
-            Assert.Equal("Entführer & Gentlemen", videos.title);
-            Assert.Equal("Jan", videos.VideoOwner.name);
-        }
-
-        [Fact]
-        public void GetAvailableVideoGenresTest()
-        {
-            IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
-
-            var genres = _videoDbRepostiory.GetGenres();
-            Assert.True(genres.Where(g => g.name == "Adventure").Count() > 0);
-        }
-        [Fact]
-        public void GetVideoDataByTitleTest()
-        {
-            IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
-
-            var actual = _videoDbRepostiory.GetVideoDataByTitle("Batman");
-
-            Assert.True(actual.Where(v => v.title.Contains("Batman")).Count() > 0);
-                
-        }
-
-        [Fact]
-        public void GetVideoDbMovieData()
-        {
-            IEnhancedVideoDbRepository _videoDbRepostiory
-                = new EnhancedVideoDbRepository(
-                    new VideoDbRepository(VideoDbContextFactory.Create(connectionString)),
-                    EnhancedVideoDbContextFactory.Create(connectionString));
-
-            var actual = _videoDbRepostiory.GetVideoData(1249);
-
-            Assert.Equal(1249, actual.Id);
-            Assert.Equal("Der Zoowärter", actual.Title);
-            Assert.True(string.IsNullOrWhiteSpace(actual.DigitalVideoFilePath));
-            Assert.Equal("R08F3D02", actual.DiskId);
-            Assert.Equal("./coverpics/1249.jpg", actual.ImgUrl);
-            Assert.Equal("101", actual.Length);
-            Assert.NotNull(actual.Plot);
-            Assert.Equal("5.79", actual.Rating);
-            Assert.True(string.IsNullOrWhiteSpace(actual.SubTitle));
-            Assert.Equal("Daniel", actual.Owner);
-            Assert.Equal(3, actual.OwnerId);
-           
-            Assert.Equal(4, actual.Genres.Count());
-            Assert.Collection(actual.Genres,
-                a => { Assert.Equal("Comedy", a); },
-                a => { Assert.Equal("Documentary", a); },
-                a => { Assert.Equal("Family", a); },
-                a => { Assert.Equal("Romance", a); }
-                );
-
-            Assert.Equal("Blu-ray", actual.MediaType);
-            Assert.Equal(16, actual.MediaTypeId);
-        }
-
-        [Fact]
-        public void GetVideoDbMovieByGenreTest()
-        {
-            IEnhancedVideoDbRepository _videoDbRepostiory
-                  = new EnhancedVideoDbRepository(
-                      new VideoDbRepository(VideoDbContextFactory.Create(connectionString)),
-                      EnhancedVideoDbContextFactory.Create(connectionString));
-
-            var actual = _videoDbRepostiory.GetMoviesByGenre(new List<string> { "Sci-Fi","Action" });
-            Assert.Equal(122, actual.Count());
-        }
-
+        }       
     }
 }
