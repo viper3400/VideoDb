@@ -12,15 +12,17 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         private readonly EnhancedVideoDbContext _enhancedVideoDbContext;
         private IVideoDbRepository _videoDbRepo;
+        private IEnhancedVideoDbOptions _options;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public EnhancedVideoDbRepository(IVideoDbRepository videoDbRepo, EnhancedVideoDbContext enhancedVideoDbContext)
+        public EnhancedVideoDbRepository(IVideoDbRepository videoDbRepo, EnhancedVideoDbContext enhancedVideoDbContext, IEnhancedVideoDbOptions options)
         {
             _videoDbRepo = videoDbRepo;
             _enhancedVideoDbContext = enhancedVideoDbContext;
+            _options = options;
         }
 
         #endregion Public Constructors

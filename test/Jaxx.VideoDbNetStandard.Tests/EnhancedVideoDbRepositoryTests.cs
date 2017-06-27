@@ -30,16 +30,21 @@ namespace Jaxx.VideoDbNetStandard.Tests
         }
 
         private string connectionString;
+        private IEnhancedVideoDbOptions _options;
 
         [Fact]
         public void GetVideoDbMovieData()
         {
+            _options = new EnhancedVideoDbOptions
+            { DeletedOwnerId = 999 };
+
             IEnhancedVideoDbRepository _videoDbRepostiory
                 = new EnhancedVideoDbRepository(
                     new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
                      new Microsoft.Extensions.Caching.Memory.MemoryCache(
                         new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions())),
-                    EnhancedVideoDbContextFactory.Create(connectionString));
+                    EnhancedVideoDbContextFactory.Create(connectionString),
+                    _options);
 
             var actual = _videoDbRepostiory.GetVideoData(1249);
 
@@ -75,7 +80,8 @@ namespace Jaxx.VideoDbNetStandard.Tests
                     new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
                      new Microsoft.Extensions.Caching.Memory.MemoryCache(
                         new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions())),
-                    EnhancedVideoDbContextFactory.Create(connectionString));
+                    EnhancedVideoDbContextFactory.Create(connectionString),
+                    _options);
 
             var actual = _videoDbRepostiory.GetMoviesByGenre(new List<string> { "Sci-Fi", "Action" });
             Assert.Equal(122, actual.Count());
