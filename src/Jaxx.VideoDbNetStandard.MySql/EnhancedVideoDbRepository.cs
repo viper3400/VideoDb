@@ -1,21 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Jaxx.VideoDbNetStandard.BusinessModel;
+﻿using Jaxx.VideoDbNetStandard.BusinessModel;
 using Jaxx.VideoDbNetStandard.DatabaseModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Jaxx.VideoDbNetStandard.MySql
 {
     public class EnhancedVideoDbRepository : IEnhancedVideoDbRepository
     {
-        IVideoDbRepository _videoDbRepo;
+        #region Private Fields
+
         private readonly EnhancedVideoDbContext _enhancedVideoDbContext;
+        private IVideoDbRepository _videoDbRepo;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public EnhancedVideoDbRepository(IVideoDbRepository videoDbRepo, EnhancedVideoDbContext enhancedVideoDbContext)
         {
             _videoDbRepo = videoDbRepo;
             _enhancedVideoDbContext = enhancedVideoDbContext;
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public IEnumerable<VideoDbMovie> GetMovieByTitle(string Title)
+        {
+            var movies = _videoDbRepo.GetVideoDataByTitle(Title);
+            return ConvertToVideoDbMovie(movies.ToList()).ToList();
+
         }
 
         /// <summary>
@@ -30,6 +46,18 @@ namespace Jaxx.VideoDbNetStandard.MySql
             var resultList = ConvertToVideoDbMovie(movies.ToList()).ToList();
             return resultList;
         }
+
+        public VideoDbMovie GetVideoData(int Id)
+        {
+            var movie = _videoDbRepo.GetVideoDataById(Id);
+            var movieResult = ConvertToVideoDbMovie(movie);
+
+            return movieResult;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         /// <summary>
         /// Converts a videodb_videodata object to VideoDbMovie object.
@@ -80,13 +108,6 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return convertedMovieList;
         }
 
-        public VideoDbMovie GetVideoData(int Id)
-        {
-
-            var movie = _videoDbRepo.GetVideoDataById(Id);         
-            var movieResult = ConvertToVideoDbMovie(movie);
-
-            return movieResult;
-        }
+        #endregion Private Methods
     }
 }

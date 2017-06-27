@@ -176,10 +176,10 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         public IEnumerable<videodb_videodata> GetVideoDataByTitle(string title)
         {
-            var videoData = _dbContext.VideoData
-                //.Include(o => o.VideoOwner)
-                .Where(v => v.title.ToString().Contains(title));
-            return videoData.ToList();
+            var videoData = _dbContext.VideoData                
+                .Where(v => v.title.ToString().Contains(title) ||
+                     (v.subtitle != null && v.subtitle.ToString().Contains(title)));
+            return videoData;
         }
 
         public IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId)

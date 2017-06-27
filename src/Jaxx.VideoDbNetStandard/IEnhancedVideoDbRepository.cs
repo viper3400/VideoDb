@@ -14,6 +14,8 @@ namespace Jaxx.VideoDbNetStandard
         /// <returns></returns>
         IEnumerable<VideoDbMovie> GetMoviesByGenre(List<string> GenreNames);
 
+        IEnumerable<VideoDbMovie> GetMovieByTitle(string Title);
+
         VideoDbMovie GetVideoData(int Id);
     }
 }
