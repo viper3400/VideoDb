@@ -8,23 +8,15 @@ using Jaxx.VideoDbNetStandard.BusinessModel;
 namespace Jaxx.VideoDbNetStandard
 {
     public interface  IVideoDbRepository
-    {                    
-        /// <summary>
-        /// Creates a new record if the id of the given object is 0.
-        /// Otherwise the record with the given id will be updated.
-        /// </summary>
-        /// <param name="Video"></param>
-        /// <returns>Returns the id of the record.</returns>
-        int InsertOrUpdateVideo(videodb_videodata Video);
+    {
+        #region Public Methods
 
         /// <summary>
-        /// Get the videodata record with the given id.
+        /// Deletes record and all of it's denpencies from videodb.
         /// </summary>
-        /// <param name="VideoId"></param>
-        /// <returns>Returns the videodata object.</returns>
-        videodb_videodata GetVideoDataById(int VideoId);
-
-        IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId);
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool DeleteVideo(int id);
 
         /// <summary>
         /// Returns a list of all available genres in the videodb repository.
@@ -33,24 +25,18 @@ namespace Jaxx.VideoDbNetStandard
         IEnumerable<videodb_genres> GetGenres();
 
         /// <summary>
-        /// Returns a list of videodata where title contains the given title string
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        IEnumerable<videodb_videodata> GetVideoDataByTitle(string title);
-
-        /// <summary>
-        /// Returns a list von videodata where plot is emtpy or incomplete.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<videodb_videodata> GetVideoDataWithIncompletePlot();
-
-        /// <summary>
         /// Returns all genres to the video with the given id
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
         IEnumerable<string> GetGenresForVideo(int VideoId);
+
+        /// <summary>
+        /// Returns the media type string for the given id.
+        /// </summary>
+        /// <param name="MediaTypeId"></param>
+        /// <returns></returns>
+        string GetMediaType(int MediaTypeId);
 
         /// <summary>
         /// Returns a list of movies matching to the given genre.
@@ -64,14 +50,38 @@ namespace Jaxx.VideoDbNetStandard
         /// </summary>
         /// <param name="UserId">UserId</param>
         /// <returns></returns>
-        string GetUserName (int UserId);
+        string GetUserName(int UserId);
 
         /// <summary>
-        /// Returns the media type string for the given id.
+        /// Get the videodata record with the given id.
         /// </summary>
-        /// <param name="MediaTypeId"></param>
-        /// <returns></returns>
-        string GetMediaType(int MediaTypeId);
+        /// <param name="VideoId"></param>
+        /// <returns>Returns the videodata object.</returns>
+        videodb_videodata GetVideoDataById(int VideoId);
 
+        /// <summary>
+        /// Returns a list of videodata where title contains the given title string
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        IEnumerable<videodb_videodata> GetVideoDataByTitle(string title);
+
+        IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId);
+
+        /// <summary>
+        /// Returns a list von videodata where plot is emtpy or incomplete.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<videodb_videodata> GetVideoDataWithIncompletePlot();
+
+        /// <summary>
+        /// Creates a new record if the id of the given object is 0.
+        /// Otherwise the record with the given id will be updated.
+        /// </summary>
+        /// <param name="Video"></param>
+        /// <returns>Returns the id of the record.</returns>
+        int InsertOrUpdateVideo(videodb_videodata Video);
+
+        #endregion Public Methods
     }
 }

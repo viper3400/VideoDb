@@ -133,6 +133,12 @@ namespace Jaxx.VideoDbNetStandard.Tests
             Assert.Equal("TestVideo (Updated)", actual.title);
             Assert.Equal("TestPlot", actual.plot);
             Assert.Equal(3, actual.owner_id);
+
+            var deleted = _videoDbRepository.DeleteVideo(updatedId);
+            Assert.True(deleted);
+
+            var deletedVideo = _videoDbRepository.GetVideoDataById(updatedId);
+            Assert.Null(deletedVideo);
         }
     }
 }

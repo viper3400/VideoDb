@@ -1,61 +1,37 @@
-﻿using System;
+﻿using Jaxx.VideoDbNetStandard.DatabaseModel;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Jaxx.VideoDbNetStandard.DatabaseModel;
-using Jaxx.VideoDbNetStandard;
-using Microsoft.EntityFrameworkCore;
-using Jaxx.VideoDbNetStandard.BusinessModel;
 
 namespace Jaxx.VideoDbNetStandard.MySql
 {
     public class VideoDbRepository : IVideoDbRepository
     {
+        #region Private Fields
+
         private readonly VideoDbContext _dbContext;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public VideoDbRepository(VideoDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        /// <summary>
-        /// Creates a new record if the id of the given object is 0.
-        /// Otherwise the record with the given id will be updated.
-        /// </summary>
-        /// <param name="Video"></param>
-        /// <returns>Returns the id of the record.</returns>
-        public int InsertOrUpdateVideo(videodb_videodata Video)
-        {
-            if (Video.id.Equals(0))
-            {
-                // if id is 0 we will create a new record
-                Video.created = DateTime.Now;
-                Video.lastupdate = DateTime.Now;
-                _dbContext.VideoData.Add(Video);
-                _dbContext.SaveChanges();
-            }
-            else
-            {
-                // in this case an existing record may be modified
-                Video.lastupdate = DateTime.Now;
-                _dbContext.Entry(Video).State = EntityState.Modified;
-                _dbContext.SaveChanges();
-            }
+        #endregion Public Constructors
 
-            return Video.id;
-        }
+        #region Public Methods
 
-        /// <summary>
-        /// Get the videodata record with the given id.
-        /// </summary>
-        /// <param name="VideoId"></param>
-        /// <returns>Returns the videodata object.</returns>
-        public videodb_videodata GetVideoDataById(int VideoId)
+        public bool DeleteVideo(int id)
         {
-            var videoData = _dbContext.VideoData
-                .Include(o => o.VideoOwner)
-                .Where(v => v.id == VideoId).FirstOrDefault();
-            return videoData;
+            var record = _dbContext.VideoData.Where(r => r.id == id).FirstOrDefault();
+            _dbContext.VideoData.Remove(record);
+            _dbContext.SaveChanges();
+            return true;
+
         }
 
         public IEnumerable<videodb_genres> GetGenres()
@@ -71,9 +47,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
                         select genres.name;
 
             return query.ToList();
-
         }
-
 
         /// <summary>
         /// Returns the media type string for the given id.
@@ -131,6 +105,19 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return query.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Get the videodata record with the given id.
+        /// </summary>
+        /// <param name="VideoId"></param>
+        /// <returns>Returns the videodata object.</returns>
+        public videodb_videodata GetVideoDataById(int VideoId)
+        {
+            var videoData = _dbContext.VideoData
+                .Include(o => o.VideoOwner)
+                .Where(v => v.id == VideoId).FirstOrDefault();
+            return videoData;
+        }
+
         public IEnumerable<videodb_videodata> GetVideoDataByTitle(string title)
         {
             var videoData = _dbContext.VideoData
@@ -161,7 +148,33 @@ namespace Jaxx.VideoDbNetStandard.MySql
             return videoData;
         }
 
+        /// <summary>
+        /// Creates a new record if the id of the given object is 0.
+        /// Otherwise the record with the given id will be updated.
+        /// </summary>
+        /// <param name="Video"></param>
+        /// <returns>Returns the id of the record.</returns>
+        public int InsertOrUpdateVideo(videodb_videodata Video)
+        {
+            if (Video.id.Equals(0))
+            {
+                // if id is 0 we will create a new record
+                Video.created = DateTime.Now;
+                Video.lastupdate = DateTime.Now;
+                _dbContext.VideoData.Add(Video);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                // in this case an existing record may be modified
+                Video.lastupdate = DateTime.Now;
+                _dbContext.Entry(Video).State = EntityState.Modified;
+                _dbContext.SaveChanges();
+            }
 
+            return Video.id;
+        }
 
+        #endregion Public Methods
     }
 }
