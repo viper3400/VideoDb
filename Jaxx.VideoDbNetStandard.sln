@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26606.0
+VisualStudioVersion = 15.0.26621.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jaxx.VideoDbNetStandard", "src\Jaxx.VideoDbNetStandard\Jaxx.VideoDbNetStandard.csproj", "{01DA3931-0796-424B-97DF-468B0E1198F2}"
 EndProject
@@ -39,5 +39,8 @@ Global
 		{01DA3931-0796-424B-97DF-468B0E1198F2} = {16284590-18F9-478C-BEFD-A1DE477B3A12}
 		{DBFF1F76-5FDC-4CC9-97CD-9B17591ACCEB} = {16284590-18F9-478C-BEFD-A1DE477B3A12}
 		{55063624-2891-499C-8BBB-4B21DDB62832} = {8F7DA5DA-D88F-4782-8061-75DE8621E8AA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1DF53F3-81EC-4887-AF36-A80690C387EE}
 	EndGlobalSection
 EndGlobal

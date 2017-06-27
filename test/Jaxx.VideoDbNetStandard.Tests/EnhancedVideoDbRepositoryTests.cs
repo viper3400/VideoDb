@@ -36,7 +36,9 @@ namespace Jaxx.VideoDbNetStandard.Tests
         {
             IEnhancedVideoDbRepository _videoDbRepostiory
                 = new EnhancedVideoDbRepository(
-                    new VideoDbRepository(VideoDbContextFactory.Create(connectionString)),
+                    new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
+                     new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions())),
                     EnhancedVideoDbContextFactory.Create(connectionString));
 
             var actual = _videoDbRepostiory.GetVideoData(1249);
@@ -69,9 +71,11 @@ namespace Jaxx.VideoDbNetStandard.Tests
         public void GetVideoDbMovieByGenreTest()
         {
             IEnhancedVideoDbRepository _videoDbRepostiory
-                  = new EnhancedVideoDbRepository(
-                      new VideoDbRepository(VideoDbContextFactory.Create(connectionString)),
-                      EnhancedVideoDbContextFactory.Create(connectionString));
+                = new EnhancedVideoDbRepository(
+                    new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
+                     new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions())),
+                    EnhancedVideoDbContextFactory.Create(connectionString));
 
             var actual = _videoDbRepostiory.GetMoviesByGenre(new List<string> { "Sci-Fi", "Action" });
             Assert.Equal(122, actual.Count());

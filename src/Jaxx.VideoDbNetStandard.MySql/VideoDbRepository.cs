@@ -1,5 +1,6 @@
 ﻿using Jaxx.VideoDbNetStandard.DatabaseModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,22 @@ namespace Jaxx.VideoDbNetStandard.MySql
     {
         #region Private Fields
 
+        const string GENRECACHE = "GENRECACHE";
+        const string MEDIATYPECACHE = "MEDIATYPECACHE";
+        const string USERSCACHE = "USERSCACHE";
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly VideoDbContext _dbContext;
-
+        private readonly IMemoryCache _memoryCache;
         #endregion Private Fields
 
         #region Public Constructors
 
-        public VideoDbRepository(VideoDbContext dbContext)
+        public VideoDbRepository(VideoDbContext dbContext, IMemoryCache memoryCache = null)
         {
             _dbContext = dbContext;
+            _memoryCache = memoryCache;
+            _cacheEntryOptions = new MemoryCacheEntryOptions()
+                  .SetSlidingExpiration(TimeSpan.FromMinutes(5));
         }
 
         #endregion Public Constructors
@@ -34,16 +42,64 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         }
 
-        public IEnumerable<videodb_genres> GetGenres()
+        /// <summary>
+        /// Returns all available genres from db (uses caching).
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<videodb_genres> GetAvailableGenres()
         {
-            return _dbContext.Genres;
+            IEnumerable<videodb_genres> genres;
+
+            var exists = _memoryCache.TryGetValue(GENRECACHE, out genres);
+            if (!exists)
+            {
+                genres = _dbContext.Genres;
+                _memoryCache.Set(GENRECACHE, genres, _cacheEntryOptions);
+            }
+            return genres;
+        }
+
+        /// <summary>
+        /// Returns all available media types from db (uses caching).
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<videodb_mediatypes> GetAvailableMediaTypes()
+        {
+            IEnumerable<videodb_mediatypes> mediaTypes;
+
+            var exists = _memoryCache.TryGetValue(MEDIATYPECACHE, out mediaTypes);
+            if (!exists)
+            {
+                mediaTypes = _dbContext.MediaTypes;
+                _memoryCache.Set(MEDIATYPECACHE, mediaTypes, _cacheEntryOptions);
+            }
+
+            return mediaTypes;
+        }
+
+        /// <summary>
+        /// Returns all available user from db (uses caching).
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<videodb_users> GetAvailableUsers()
+        {
+            IEnumerable<videodb_users> users;
+
+            var exists = _memoryCache.TryGetValue(USERSCACHE, out users);
+            if (!exists)
+            {
+                users = _dbContext.Users;
+                _memoryCache.Set(USERSCACHE, users, _cacheEntryOptions);
+            }
+
+            return users;
         }
 
         public IEnumerable<string> GetGenresForVideo(int Id)
         {
             var query = from vidgenres in _dbContext.Genre
                         where vidgenres.video_id == Id
-                        join genres in _dbContext.Genres on vidgenres.genre_id equals genres.id
+                        join genres in GetAvailableGenres() on vidgenres.genre_id equals genres.id
                         select genres.name;
 
             return query.ToList();
@@ -56,7 +112,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
         /// <returns></returns>
         public string GetMediaType(int MediaTypeId)
         {
-            var query = from media in _dbContext.MediaTypes
+            var query = from media in GetAvailableMediaTypes()
                         where media.id == MediaTypeId
                         select media.name;
 
@@ -128,10 +184,8 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         public IEnumerable<videodb_videodata> GetVideoDataForUser(int UserId)
         {
-            var userVideos = _dbContext.Users
-                .Include(u => u.UserVideos)
-                .Where(u => u.id == UserId).FirstOrDefault()
-                .UserVideos;
+            var userVideos = _dbContext.VideoData
+                .Where(v => v.owner_id == UserId);
 
             return userVideos;
         }
@@ -174,7 +228,6 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
             return Video.id;
         }
-
         #endregion Public Methods
     }
 }

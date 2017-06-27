@@ -57,7 +57,10 @@ namespace Jaxx.VideoDbNetStandard.Tests
         public void UserVideosOverRepositoryTest()
         {
             IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+                = new VideoDbRepository(
+                    VideoDbContextFactory.Create(connectionString),
+                    new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
             var videos = _videoDbRepostiory.GetVideoDataForUser(3);
             Assert.True(videos.Count() > 0);
@@ -79,17 +82,63 @@ namespace Jaxx.VideoDbNetStandard.Tests
         }
 
         /// <summary>
-        /// Get videos for the given genre.
+        /// Tests if available genres could be fetched from db.
         /// </summary>
         [Fact]
         public void GetAvailableVideoGenresTest()
         {
             IVideoDbRepository _videoDbRepostiory
-                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+                = new VideoDbRepository(
+                    VideoDbContextFactory.Create(connectionString),
+                    new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
-            var genres = _videoDbRepostiory.GetGenres();
+            var genres = _videoDbRepostiory.GetAvailableGenres();
+            Assert.True(genres.Where(g => g.name == "Adventure").Count() > 0);
+            // should use cache
+            genres = _videoDbRepostiory.GetAvailableGenres();
             Assert.True(genres.Where(g => g.name == "Adventure").Count() > 0);
         }
+
+        /// <summary>
+        /// Tests if available media types could be fetched from db.
+        /// </summary>
+        [Fact]
+        public void GetAvailableMediaTypesTest()
+        {
+            IVideoDbRepository _videoDbRepostiory
+                = new VideoDbRepository(
+                    VideoDbContextFactory.Create(connectionString),
+                    new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
+
+            var mediaTypes = _videoDbRepostiory.GetAvailableMediaTypes();
+            Assert.True(mediaTypes.Where(t => t.name == "DVD").Count() > 0);
+            // should use cache
+            mediaTypes = _videoDbRepostiory.GetAvailableMediaTypes();
+            Assert.True(mediaTypes.Where(t => t.name == "DVD").Count() > 0);
+        }
+
+        /// <summary>
+        /// Tests if available users could be fetched from db.
+        /// </summary>
+        [Fact]
+        public void GetAvailableUsersTest()
+        {
+            IVideoDbRepository _videoDbRepostiory
+                = new VideoDbRepository(
+                    VideoDbContextFactory.Create(connectionString),
+                    new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                        new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
+
+            var users = _videoDbRepostiory.GetAvailableUsers();
+            Assert.True(users.Where(t => t.name == "Jan").Count() > 0);
+            // should use cache
+            users = _videoDbRepostiory.GetAvailableUsers();
+            Assert.True(users.Where(t => t.name == "Jan").Count() > 0);
+        }
+
+
 
         /// <summary>
         /// Get videos matching the title

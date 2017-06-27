@@ -22,7 +22,19 @@ namespace Jaxx.VideoDbNetStandard
         /// Returns a list of all available genres in the videodb repository.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<videodb_genres> GetGenres();
+        IEnumerable<videodb_genres> GetAvailableGenres();
+
+        /// <summary>
+        /// Returns a list of all available media types in the videodb repository.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<videodb_mediatypes> GetAvailableMediaTypes();
+
+        /// <summary>
+        /// Returns a list of all available users in the videodb repository.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<videodb_users> GetAvailableUsers();
 
         /// <summary>
         /// Returns all genres to the video with the given id

@@ -8,4 +8,9 @@
     <FileVersion>1.0.0.3</FileVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dapplo.Log" Version="1.0.29" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
+  </ItemGroup>
+
 </Project>
