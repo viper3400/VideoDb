@@ -124,7 +124,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
             var resultList = new List<videodb_videodata>();
 
             var genreIds = _dbContext.Genres
-                .Where(g => GenreNames.Contains(g.name))
+                .Where(g => GenreNames.Contains(g.name, StringComparer.OrdinalIgnoreCase))
                 .Select(g => g.id)
                 .ToList();
 

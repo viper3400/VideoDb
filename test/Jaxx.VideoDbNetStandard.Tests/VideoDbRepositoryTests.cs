@@ -82,7 +82,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
         }
 
         /// <summary>
-        /// Tests if available genres could be fetched from db.
+        /// Tests if available genres could be fetched from db (case insensitive)
         /// </summary>
         [Fact]
         public void GetAvailableVideoGenresTest()
@@ -94,6 +94,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
                         new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions()));
 
             var genres = _videoDbRepostiory.GetAvailableGenres();
+            // search should be case insensitive
             Assert.True(genres.Where(g => g.name == "Adventure").Count() > 0);
             // should use cache
             genres = _videoDbRepostiory.GetAvailableGenres();
