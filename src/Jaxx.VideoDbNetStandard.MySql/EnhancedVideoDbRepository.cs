@@ -31,7 +31,10 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         public IEnumerable<VideoDbMovie> GetMovieByTitle(string Title)
         {
-            var movies = _videoDbRepo.GetVideoDataByTitle(Title);
+            var movies = _videoDbRepo
+                .GetVideoDataByTitle(Title)
+                .Where(v => v.owner_id != _options.DeletedOwnerId);
+
             return ConvertToVideoDbMovie(movies.ToList()).ToList();
 
         }
@@ -43,7 +46,9 @@ namespace Jaxx.VideoDbNetStandard.MySql
         /// <returns></returns>
         public IEnumerable<VideoDbMovie> GetMoviesByGenre(List<string> GenreNames)
         {
-            var movies = _videoDbRepo.GetMoviesByGenre(GenreNames);
+            var movies = _videoDbRepo
+                .GetMoviesByGenre(GenreNames)
+                .Where(v => v.owner_id != _options.DeletedOwnerId);
 
             var resultList = ConvertToVideoDbMovie(movies.ToList()).ToList();
             return resultList;
@@ -85,7 +90,13 @@ namespace Jaxx.VideoDbNetStandard.MySql
             };
 
             converted.Genres = _videoDbRepo.GetGenresForVideo(source.id).ToList();
-            converted.Owner = _videoDbRepo.GetUserName(source.owner_id);
+
+            if (source.owner_id == _options.DeletedOwnerId && _options.IsDeletedOwnerVirtual)
+            {
+                converted.Owner = "Video has been marked as deleted (no owner).";
+            }
+            else   converted.Owner = _videoDbRepo.GetUserName(source.owner_id);
+
             converted.MediaType = _videoDbRepo.GetMediaType(source.mediatype);
 
             return converted;

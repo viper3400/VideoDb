@@ -7,5 +7,6 @@ namespace Jaxx.VideoDbNetStandard
     public interface IEnhancedVideoDbOptions
     {
         int DeletedOwnerId { get; set; }
+        bool IsDeletedOwnerVirtual { get; set; }
     }
 }

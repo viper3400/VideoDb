@@ -78,7 +78,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
             var videos = _videoDbRepostiory.GetVideoDataById(52);
             Assert.True(videos.id == 52, "Wrong id.");
             Assert.Equal("Entführer & Gentlemen", videos.title);
-            Assert.Equal("Jan", videos.VideoOwner.name);
+            Assert.Equal(2, videos.owner_id);
         }
 
         /// <summary>

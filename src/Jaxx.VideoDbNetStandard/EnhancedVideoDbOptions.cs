@@ -7,6 +7,7 @@ namespace Jaxx.VideoDbNetStandard
     public class EnhancedVideoDbOptions : IEnhancedVideoDbOptions
     {
         private int _deltedOwenerId = -1;
+        private bool _isDeletedOwnerVirtual = true;
 
         public int DeletedOwnerId
         {
@@ -18,5 +19,13 @@ namespace Jaxx.VideoDbNetStandard
             }
             set => _deltedOwenerId = value;
         }
+
+        public bool IsDeletedOwnerVirtual
+        {
+            get
+            {
+                return _isDeletedOwnerVirtual;
+            }
+            set => _isDeletedOwnerVirtual = value; }
     }
 }

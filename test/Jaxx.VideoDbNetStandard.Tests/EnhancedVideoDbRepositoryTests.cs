@@ -27,6 +27,13 @@ namespace Jaxx.VideoDbNetStandard.Tests
                 .Build();
 
             connectionString = config["TESTDB_CONNECTIONSTRING"];
+
+            _options = new EnhancedVideoDbOptions
+            {
+                DeletedOwnerId = 999,
+                IsDeletedOwnerVirtual = true
+            };
+
         }
 
         private string connectionString;
@@ -35,9 +42,6 @@ namespace Jaxx.VideoDbNetStandard.Tests
         [Fact]
         public void GetVideoDbMovieData()
         {
-            _options = new EnhancedVideoDbOptions
-            { DeletedOwnerId = 999 };
-
             IEnhancedVideoDbRepository _videoDbRepostiory
                 = new EnhancedVideoDbRepository(
                     new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
@@ -85,6 +89,37 @@ namespace Jaxx.VideoDbNetStandard.Tests
 
             var actual = _videoDbRepostiory.GetMoviesByGenre(new List<string> { "Sci-Fi", "Action" });
             Assert.Equal(122, actual.Count());
+        }
+
+        [Fact]
+        public void DeletedOwnerTests()
+        {
+            IEnhancedVideoDbRepository _enhancedRepo
+               = new EnhancedVideoDbRepository(
+                   new VideoDbRepository(VideoDbContextFactory.Create(connectionString),
+                    new Microsoft.Extensions.Caching.Memory.MemoryCache(
+                       new Microsoft.Extensions.Caching.Memory.MemoryCacheOptions())),
+                   EnhancedVideoDbContextFactory.Create(connectionString),
+                   _options);
+
+            var video = new DatabaseModel.videodb_videodata();
+            video.title = "TestVideoDeleted";
+            video.plot = "TestPlot";
+            video.owner_id = _options.DeletedOwnerId;
+
+            IVideoDbRepository _videoDbRepository
+                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+
+            var id = _videoDbRepository.InsertOrUpdateVideo(video);
+
+            var actual =_enhancedRepo.GetMovieByTitle("TestVideoDeleted");
+            Assert.True(actual.Count() == 0);
+
+            var deleted = _enhancedRepo.GetVideoData(id);
+            Assert.Equal("Video has been marked as deleted (no owner).", deleted.Owner);
+            Assert.Equal(_options.DeletedOwnerId, deleted.OwnerId);
+
+            _videoDbRepository.DeleteVideo(id);
         }
 
     }
