@@ -141,7 +141,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
 
 
         /// <summary>
-        /// Get videos matching the title
+        /// Get videos matching the title (case insensitive)
         /// </summary>
         [Fact]
         public void GetVideoDataByTitleTest()
@@ -149,7 +149,8 @@ namespace Jaxx.VideoDbNetStandard.Tests
             IVideoDbRepository _videoDbRepostiory
                 = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
 
-            var actual = _videoDbRepostiory.GetVideoDataByTitle("Batman");
+            // call search with small letters "batman"
+            var actual = _videoDbRepostiory.GetVideoDataByTitle("batman");
 
             Assert.True(actual.Where(v => v.title.Contains("Batman")).Count() > 0);
         }

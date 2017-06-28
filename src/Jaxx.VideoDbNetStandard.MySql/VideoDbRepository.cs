@@ -169,7 +169,6 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public videodb_videodata GetVideoDataById(int VideoId)
         {
             var videoData = _dbContext.VideoData
-                //.Include(o => o.VideoOwner)
                 .Where(v => v.id == VideoId).FirstOrDefault();
             return videoData;
         }
@@ -177,8 +176,8 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public IEnumerable<videodb_videodata> GetVideoDataByTitle(string title)
         {
             var videoData = _dbContext.VideoData                
-                .Where(v => v.title.ToString().Contains(title) ||
-                     (v.subtitle != null && v.subtitle.ToString().Contains(title)));
+                .Where(v => v.title.ToLower().Contains(title.ToLower()) ||
+                     (v.subtitle != null && v.subtitle.ToLower().Contains(title.ToLower())));
             return videoData;
         }
 
