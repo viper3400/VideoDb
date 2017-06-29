@@ -32,8 +32,10 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public IEnumerable<VideoDbMovie> GetMovieByTitle(string Title)
         {
             var movies = _videoDbRepo
-                .GetVideoDataByTitle(Title)
-                .Where(v => v.owner_id != _options.DeletedOwnerId);
+                .GetVideoDataByTitle(Title);
+
+            // filter deleted records if necessary
+            movies = FilterDeletedRecords(movies);
 
             return ConvertToVideoDbMovie(movies.ToList()).ToList();
 
@@ -47,8 +49,10 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public IEnumerable<VideoDbMovie> GetMoviesByGenre(List<string> GenreNames)
         {
             var movies = _videoDbRepo
-                .GetMoviesByGenre(GenreNames)
-                .Where(v => v.owner_id != _options.DeletedOwnerId);
+                .GetMoviesByGenre(GenreNames);
+
+            // filter deleted records if necessary
+            movies = FilterDeletedRecords(movies);
 
             var resultList = ConvertToVideoDbMovie(movies.ToList()).ToList();
             return resultList;
@@ -119,6 +123,21 @@ namespace Jaxx.VideoDbNetStandard.MySql
             }
 
             return convertedMovieList;
+        }
+
+        /// <summary>
+        /// This method checks, if options "FilterDeletedRecords" is set. If so, the records with the owener id
+        /// given in option "DeletedOwnerId" will be removed from result set.
+        /// </summary>
+        /// <param name="movies"></param>
+        /// <returns></returns>
+        private IEnumerable<videodb_videodata> FilterDeletedRecords(IEnumerable<videodb_videodata> movies)
+        {      
+            if (_options.FilterDeletedRecords)
+                movies = movies.Where(v => v.owner_id != _options.DeletedOwnerId);
+
+            return movies;
+
         }
 
         #endregion Private Methods
