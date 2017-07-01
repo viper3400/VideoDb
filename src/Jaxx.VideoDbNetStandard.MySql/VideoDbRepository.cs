@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Jaxx.VideoDbNetStandard.MySql
 {
+    /// <summary>
+    /// VideoDbRepository implements interface IVideoDbRepository. It's the basic repository to access videodb database directly by data model.
+    /// </summary>
     public class VideoDbRepository : IVideoDbRepository
     {
         #region Private Fields
@@ -21,6 +24,11 @@ namespace Jaxx.VideoDbNetStandard.MySql
 
         #region Public Constructors
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dbContext">Instance of the VideoDbContext</param>
+        /// <param name="memoryCache">Instance of the IMemoryCache</param>
         public VideoDbRepository(VideoDbContext dbContext, IMemoryCache memoryCache = null)
         {
             _dbContext = dbContext;

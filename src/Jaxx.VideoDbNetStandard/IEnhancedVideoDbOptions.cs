@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Jaxx.VideoDbNetStandard
 {
+    /// <summary>
+    /// Interface for EnhancedVideoDbOptions
+    /// </summary>
     public interface IEnhancedVideoDbOptions
     {
         /// <summary>
