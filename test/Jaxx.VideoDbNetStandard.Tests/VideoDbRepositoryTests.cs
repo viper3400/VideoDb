@@ -82,6 +82,20 @@ namespace Jaxx.VideoDbNetStandard.Tests
         }
 
         /// <summary>
+        /// Get video with not available id
+        /// </summary>
+        [Fact]
+        public void GetVideoDataWithUnvailableId()
+        {
+            IVideoDbRepository _videoDbRepostiory
+                = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+
+            var video = _videoDbRepostiory.GetVideoDataById(82);
+            Assert.Null(video);
+
+        }
+
+        /// <summary>
         /// Tests if available genres could be fetched from db (case insensitive)
         /// </summary>
         [Fact]
