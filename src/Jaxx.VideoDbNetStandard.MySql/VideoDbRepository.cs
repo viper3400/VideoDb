@@ -51,6 +51,15 @@ namespace Jaxx.VideoDbNetStandard.MySql
         }
 
         /// <summary>
+        /// Get all records without filtering.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<videodb_videodata> GetAllRecords()
+        {
+            return _dbContext.VideoData;
+        }
+
+        /// <summary>
         /// Returns all available genres from db (uses caching).
         /// </summary>
         /// <returns></returns>

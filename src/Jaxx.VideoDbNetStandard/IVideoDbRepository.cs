@@ -19,6 +19,12 @@ namespace Jaxx.VideoDbNetStandard
         bool DeleteVideo(int id);
 
         /// <summary>
+        /// Get all records without filtering
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<videodb_videodata> GetAllRecords();        
+
+        /// <summary>
         /// Returns a list of all available genres in the videodb repository.
         /// </summary>
         /// <returns></returns>
