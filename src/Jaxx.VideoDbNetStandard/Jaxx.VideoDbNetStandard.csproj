@@ -6,9 +6,14 @@
     <Version>1.0.0.7</Version>
     <AssemblyVersion>1.0.0.7</AssemblyVersion>
     <FileVersion>1.0.0.7</FileVersion>
+    <Configurations>Debug;Release;WithoutTest</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Jaxx.VideoDbNetStandard.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='WithoutTest|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\Jaxx.VideoDbNetStandard.xml</DocumentationFile>
   </PropertyGroup>
 
