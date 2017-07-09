@@ -56,6 +56,9 @@ namespace Jaxx.VideoDbNetStandard.MySql
             modelBuilder.Entity<videodb_videodata>()
                 .ToTable("videodb_videodata");
 
+            modelBuilder.Entity<videodb_videodata>()
+                .Property(p => p.plot).HasColumnType("text");
+
             MapForeignKeys(modelBuilder);
         }
 
