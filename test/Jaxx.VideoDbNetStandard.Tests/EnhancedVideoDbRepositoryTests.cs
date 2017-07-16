@@ -133,7 +133,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
                     _options);
 
             var actual = _videoDbRepostiory.GetMoviesByGenre(new List<string> { "Sci-Fi", "Action" });
-            Assert.Equal(122, actual.Count());
+            Assert.Equal(121, actual.Count());
         }
 
         [Fact]
