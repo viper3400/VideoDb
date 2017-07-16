@@ -175,7 +175,17 @@ namespace Jaxx.VideoDbNetStandard.Tests
         {
             var video = new videodb_videodata();
             video.title = "TestVideo";
-            video.plot = "TestPlot";
+
+            // plot was cut after 256 items, see https://github.com/viper3400/VideoDb/issues/1
+            var plotBuilder = new StringBuilder();
+            plotBuilder.Append("Lorem ipsum dolor sit amet, causae honestatis his eu. Justo quaeque gubergren at per, probo brute nihil vis no.");
+            plotBuilder.Append("His id salutandi consectetuer. In qualisque incorrupte vis, iudico aliquip mei et, ei adolescens voluptaria duo. ");
+            plotBuilder.Append("Atqui populo singulis cum at. In causae labores vivendo sea. In brute oporteat appellantur sed.");
+            plotBuilder.Append("Cu odio error laboramus his, percipit iracundia argumentum eam te, ea tamquam utroque constituto mei. ");
+            plotBuilder.Append("Odio albucius elaboraret ei est. Iudico possim nam ne, cu iusto efficiantur vix. ");
+            plotBuilder.Append("Te eum simul albucius conclusionemque, et cum nulla eruditi intellegam. Impetus singulis no mel.");
+            plotBuilder.Append("Usu quidam accumsan concludaturque an, pri dico inimicus.");
+            video.plot = plotBuilder.ToString(); ;
             video.owner_id = 3;
 
             IVideoDbRepository _videoDbRepository
@@ -187,7 +197,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
             var actual = _videoDbRepository.GetVideoDataById(id);
 
             Assert.Equal("TestVideo", actual.title);
-            Assert.Equal("TestPlot", actual.plot);
+            Assert.Equal(plotBuilder.ToString(), actual.plot);
             Assert.Equal(3, actual.owner_id);
 
             video.title = "TestVideo (Updated)";
@@ -196,7 +206,7 @@ namespace Jaxx.VideoDbNetStandard.Tests
             Assert.Equal(id, updatedId);
 
             Assert.Equal("TestVideo (Updated)", actual.title);
-            Assert.Equal("TestPlot", actual.plot);
+            Assert.Equal(plotBuilder.ToString(), actual.plot);
             Assert.Equal(3, actual.owner_id);
 
             var deleted = _videoDbRepository.DeleteVideo(updatedId);
