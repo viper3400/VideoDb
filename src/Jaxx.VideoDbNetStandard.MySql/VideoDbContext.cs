@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
 using Jaxx.VideoDbNetStandard.DatabaseModel;
 
 
@@ -97,7 +96,7 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public static VideoDbContext Create(string connectionString)
         {
             var optionsBuilder = new DbContextOptionsBuilder<VideoDbContext>();
-            optionsBuilder.UseMySQL(connectionString);
+            optionsBuilder.UseMySql(connectionString);
 
             //Ensure database creation
             var context = new VideoDbContext(optionsBuilder.Options);
