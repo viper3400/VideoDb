@@ -100,6 +100,13 @@ namespace Jaxx.VideoDbNetStandard
         /// <returns>Returns the id of the record.</returns>
         int InsertOrUpdateVideo(videodb_videodata Video);
 
+        /// <summary>
+        /// Returs a list of videodata matching the linq string given in the where clause.
+        /// </summary>
+        /// <param name="whereClause"></param>
+        /// <returns></returns>
+        IEnumerable<videodb_videodata> GetVideoDataDynamic(string whereClause);
+
         #endregion Public Methods
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace Jaxx.VideoDbNetStandard.MySql
 {
@@ -243,6 +244,12 @@ namespace Jaxx.VideoDbNetStandard.MySql
             }
 
             return Video.id;
+        }
+
+        public IEnumerable<videodb_videodata> GetVideoDataDynamic(string whereClause)
+        {
+            var query = _dbContext.VideoData.Where(whereClause);
+            return query;
         }
         #endregion Public Methods
     }

@@ -215,5 +215,15 @@ namespace Jaxx.VideoDbNetStandard.Tests
             var deletedVideo = _videoDbRepository.GetVideoDataById(updatedId);
             Assert.Null(deletedVideo);
         }
+
+        [Fact]
+        public void DynamicWhereClauseTest()
+        {
+            var _videoDbRepository
+               = new VideoDbRepository(VideoDbContextFactory.Create(connectionString));
+
+            var result = _videoDbRepository.GetVideoDataDynamic("id=500").FirstOrDefault();
+            Assert.Equal("In 80 Tagen um die Welt", result.title);
+        }
     }
 }
