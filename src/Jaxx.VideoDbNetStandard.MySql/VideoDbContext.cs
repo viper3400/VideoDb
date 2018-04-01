@@ -66,11 +66,25 @@ namespace Jaxx.VideoDbNetStandard.MySql
             modelBuilder.Entity<videodb_videodata>()
                 .HasOne(o => o.VideoOwner)
                 .WithMany(p => p.UserVideos)
-                .HasForeignKey(f => f.owner_id);
+                .HasForeignKey(f => f.owner_id);          
 
             modelBuilder.Entity<videodb_users>()
                 .HasMany(v => v.UserVideos)
                 .WithOne(u => u.VideoOwner);
+
+            modelBuilder.Entity<videodb_videogenre>()
+                .HasKey(vg => new { vg.genre_id, vg.video_id });
+
+            modelBuilder.Entity<videodb_videogenre>()
+                .HasOne(vg => vg.Video)
+                .WithMany(g => g.VideoGenres)
+                .HasForeignKey(vg => vg.video_id);
+
+            modelBuilder.Entity<videodb_videogenre>()
+                .HasOne(vg => vg.Genre)
+                .WithMany(v => v.VideosForGenre)
+                .HasForeignKey(vg => vg.genre_id);
+
         }
 
         public DbSet<videodb_actors> Actors { get; set; }

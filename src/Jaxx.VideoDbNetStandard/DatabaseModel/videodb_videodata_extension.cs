@@ -8,5 +8,6 @@ namespace Jaxx.VideoDbNetStandard.DatabaseModel
     public  partial class videodb_videodata
     {
         public virtual videodb_users VideoOwner { get; set; }
+        public virtual IEnumerable<videodb_videogenre> VideoGenres { get; set; }
     }
 }

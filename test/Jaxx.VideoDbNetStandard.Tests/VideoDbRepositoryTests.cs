@@ -78,6 +78,8 @@ namespace Jaxx.VideoDbNetStandard.Tests
             var videos = _videoDbRepostiory.GetVideoDataById(52);
             Assert.True(videos.id == 52, "Wrong id.");
             Assert.Equal("Entführer & Gentlemen", videos.title);
+            Assert.True(videos.VideoGenres.Count() == 1);
+            Assert.Equal("Comedy", videos.VideoGenres.FirstOrDefault().Genre.name);
             Assert.Equal(2, videos.owner_id);
         }
 

@@ -187,7 +187,11 @@ namespace Jaxx.VideoDbNetStandard.MySql
         public videodb_videodata GetVideoDataById(int VideoId)
         {
             var videoData = _dbContext.VideoData
+                .Include(v => v.VideoOwner)
+                .Include(g => g.VideoGenres)
+                .ThenInclude(z => z.Genre)
                 .Where(v => v.id == VideoId).FirstOrDefault();
+           
             return videoData;
         }
 
